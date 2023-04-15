@@ -1,7 +1,6 @@
 fn main() {
-    pretty_print("hello"); 
+    pretty_print("hello");
 }
-
 
 pub fn pretty_print(s: &str) {
     print!(r"oh my god {}", s);
