@@ -1,17 +1,19 @@
-fn main() {
-    pretty_print("hello");
+use actix_web::{web, App, HttpRequest, HttpServer, Responder};
+
+async fn greet(req: HttpRequest) -> impl Responder {
+    let name = req.match_info().get("name").unwrap_or("World");
+    format!("Hello {}!", &name)
 }
 
-pub fn pretty_print(s: &str) {
-    print!(r"oh my god {}", s);
-}
 
-#[cfg(test)]
-mod test {
-    use crate::pretty_print;
-
-    #[test]
-    fn test_pretty_print() {
-        assert_eq!((), pretty_print("hello"));
-    }
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    HttpServer::new(|| {
+        App::new()
+            .route("/", web::get().to(greet))
+            .route("/{name}", web::get().to(greet))
+    })
+    .bind("127.0.0.1:8000")?
+    .run()
+    .await
 }
